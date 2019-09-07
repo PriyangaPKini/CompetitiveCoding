@@ -3,8 +3,6 @@
 int c,n;
 int time=0;
 
-int count=0;
-
 struct Processes
 	{
 		int arrivalTime,burstTime, waiting,turnAround,rt,p;
@@ -38,12 +36,18 @@ void displayStatus(struct Processes process[n])
 void display(struct Processes process[n])
 {
 	int j;
+	int sw=0;
+	int st=0;
 	for(j=0;j<n;j++)
 	{	
 		printf("\nProcess		Arrival Time		Burst Time		Waiting Time		Turn Around Time\n");
     	printf("Process %d:	  %d			  %d	 	 	%d			 %d	\n",process[j].name,process[j].arrivalTime,
     	        process[j].burstTime,process[j].waiting , process[j].turnAround);
+    	sw+=process[j].waiting;
+    	st+=process[j].turnAround;
+
 	}
+	printf("\nAverage waiting time: %f\nAverage turnaround time: %f\n",sw*1.0/n,st*1.0/n);
 
 
 }
@@ -112,6 +116,7 @@ void bsortProcess(struct Processes process[n])
 
 }
 void priority() {
+	int count=0;
     int i, j, cp = 10, tq = 1;
     time = 0;
     input(process);
@@ -146,7 +151,8 @@ void roundRobin()
 {
 	//struct Processes process[n];
 	int i,j;
-	int tq=3;
+	int tq=1;
+	int count=0;
 	input(process);
 	
 	bsortProcess(process);
@@ -200,19 +206,19 @@ void roundRobin()
 
 void sjf()
 {
-
-	int i,j,bsum=0;
+	int count=0;
+	int i,j,curt=0;
 	input(process);
 	
 	bsortProcess(process);
 	i=0;
-	while(count<=n)
+	while(count<n)
 	{	
-		if(process[i].arrivalTime<=bsum)
+		if(process[i].arrivalTime<=curt)
 		{
 		printf("\nProcess%d is executing...\n",process[i].name);
-		bsum+=process[i].burstTime;
-		process[i].turnAround=bsum-process[i].arrivalTime;
+		curt+=process[i].burstTime;
+		process[i].turnAround=curt-process[i].arrivalTime;
 		process[i].waiting=process[i].turnAround-process[i].burstTime;
 		count++;
 		
@@ -230,7 +236,7 @@ void sjf()
 void fcfs()
 {
 	struct Processes process[n];
-	int i,j,bsum=0;
+	int i,j,curt=0;
 	input(process);
 
 	bsortProcess(process);
@@ -238,8 +244,8 @@ void fcfs()
 	for (i = 0; i < n; ++i)
 	{	
 		printf("Process%d is executing...",process[i].name);
-		bsum+=process[i].burstTime;
-		process[i].turnAround=bsum-process[i].arrivalTime;
+		curt+=process[i].burstTime;
+		process[i].turnAround=curt-process[i].arrivalTime;
 		process[i].waiting=process[i].turnAround-process[i].burstTime;
 	}
 	display(process);
@@ -249,24 +255,24 @@ void fcfs()
 
 void main()
 {
+	printf("Enter the number of processes:");
+	scanf("%d",&n);
+	printf("Choose your Cpu scheduling algorithm:\n1.FCFS\n2.SJF\n3.ROUND ROBIN\n4.PRIORITY\n");
+	scanf("%d",&c);
+	switch(c)
+	{
+		case 1: fcfs();
+			break;
+		case 2: sjf();
+			break;
+		case 3: roundRobin();
+			break;
+		case 4:	priority();
+			break;
+		default:printf("Invalid choice!!\n");
+			break;
+	}
 
-printf("Enter the number of processes:");
-scanf("%d",&n);
-printf("Choose your Cpu scheduling algorithm:\n1.FCFS\n2.SJF\n3.ROUND ROBIN\n4.PRIORITY\n");
-scanf("%d",&c);
-switch(c)
-{
-	case 1: fcfs();
-		break;
-	case 2: sjf();
-		break;
-	case 3: roundRobin();
-		break;
-    case 4:	priority();
-        break;
-    default:printf("Invalid choice!!\n");
-        break;
-}
 }
 
 			
